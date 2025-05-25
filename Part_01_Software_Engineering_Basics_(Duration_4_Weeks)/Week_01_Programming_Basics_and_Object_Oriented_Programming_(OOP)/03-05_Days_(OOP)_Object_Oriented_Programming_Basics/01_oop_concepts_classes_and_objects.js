@@ -1,4 +1,4 @@
-//TODO OOP Kavramları: Sınıflar ve Nesneler (Temel Bakış)
+//TODO Bölüm 1: OOP Kavramları: Sınıflar ve Nesneler (Temel Bakış)
 
 /**
  * Nesne Yönelimli Programlama (OOP), programları "nesneler" etrafında organize eden bir programlama paradigmasıdır.

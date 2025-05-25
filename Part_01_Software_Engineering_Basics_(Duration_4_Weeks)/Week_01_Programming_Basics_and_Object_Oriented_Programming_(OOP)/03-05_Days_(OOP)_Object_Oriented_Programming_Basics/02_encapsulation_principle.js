@@ -1,4 +1,4 @@
-//TODO B. Kapsülleme (Encapsulation) Prensibi
+//TODO Bölüm 2: Kapsülleme (Encapsulation) Prensibi
 
 /**
  *? Tanım:
