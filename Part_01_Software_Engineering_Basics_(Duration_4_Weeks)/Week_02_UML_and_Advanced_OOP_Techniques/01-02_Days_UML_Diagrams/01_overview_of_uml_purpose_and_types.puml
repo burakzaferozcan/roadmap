@@ -1,121 +1,137 @@
-Bölüm 1: UML'in Amacı ve Türleri Hakkında Genel Bilgi
+'TODO Bölüm 1: UML'in Amacı ve Türleri Hakkında Genel Bilgi
 
-1.1. UML Nedir? (Unified Modeling Language - Birleşik Modelleme Dili)
+'! 1.1. UML Nedir? (Unified Modeling Language - Birleşik Modelleme Dili)
 
-Tanım: UML, yazılım yoğun sistemlerin görselleştirilmesi, belirtilmesi, oluşturulması ve belgelenmesi için
-kullanılan standartlaştırılmış bir grafiksel modelleme dilidir.
-Bir programlama dili değildir, ancak programlama dillerinden bağımsız olarak sistemlerin yapısını ve
-davranışını tanımlamak için bir gösterim (notasyon) sistemidir.
+'* Tanım:
+'  UML, yazılım yoğun sistemlerin görselleştirilmesi, belirtilmesi, oluşturulması ve belgelenmesi için
+'  kullanılan standartlaştırılmış bir grafiksel modelleme dilidir.
+'  Bir programlama dili değildir, ancak programlama dillerinden bağımsız olarak sistemlerin yapısını ve
+'  davranışını tanımlamak için bir gösterim (notasyon) sistemidir.
 
-Oluşumu: 1990'ların ortalarında "üç amigo" olarak bilinen Grady Booch, Ivar Jacobson ve James Rumbaugh'un
-kendi nesne yönelimli modelleme yöntemlerini birleştirmesiyle ortaya çıkmıştır.
-Object Management Group (OMG) tarafından standartlaştırılmıştır.
+'* Oluşumu:
+'  1990'ların ortalarında "üç amigo" olarak bilinen Grady Booch, Ivar Jacobson ve James Rumbaugh'un
+'  kendi nesne yönelimli modelleme yöntemlerini birleştirmesiyle ortaya çıkmıştır.
+'  Object Management Group (OMG) tarafından standartlaştırılmıştır.
 
-Neden UML?
-İletişim:
-Geliştiriciler, analistler, tasarımcılar ve paydaşlar arasında ortak bir dil sağlayarak yanlış anlaşılmaları azaltır.
+'? Neden UML?
 
-Anlama: 
-Karmaşık sistemlerin daha kolay anlaşılmasını sağlar. Büyük resmi görmeye yardımcı olur.
+'* İletişim:
+'  Geliştiriciler, analistler, tasarımcılar ve paydaşlar arasında ortak bir dil sağlayarak yanlış anlaşılmaları azaltır.
 
-Tasarım: 
-Yazılımın mimarisini ve tasarımını planlamak, analiz etmek ve doğrulamak için bir araçtır.
-Potansiyel sorunları erken aşamada tespit etmeye yardımcı olabilir.
+'* Anlama: 
+'  Karmaşık sistemlerin daha kolay anlaşılmasını sağlar. Büyük resmi görmeye yardımcı olur.
 
-Belgeleme: 
-Sistem hakkında kalıcı ve anlaşılır bir belge oluşturur. Bu, bakım ve gelecekteki geliştirmeler için önemlidir.
+'* Tasarım: 
+'  Yazılımın mimarisini ve tasarımını planlamak, analiz etmek ve doğrulamak için bir araçtır.
+'  Potansiyel sorunları erken aşamada tespit etmeye yardımcı olabilir.
 
-Otomasyon: 
-Bazı UML araçları, diyagramlardan kod iskeleti (code skeleton) veya test senaryoları üretebilir.
+'* Belgeleme: 
+'  Sistem hakkında kalıcı ve anlaşılır bir belge oluşturur. Bu, bakım ve gelecekteki geliştirmeler için önemlidir.
 
-1.2. UML'in Temel Yapı Taşları
-UML diyagramları, belirli anlamları olan grafiksel semboller kullanır. En temel yapı taşları şunlardır:
+'* Otomasyon: 
+'  Bazı UML araçları, diyagramlardan kod iskeleti (code skeleton) veya test senaryoları üretebilir.
 
-Şeyler (Things): Modelin temel soyutlamalarıdır.
+'! 1.2. UML'in Temel Yapı Taşları
+' UML diyagramları, belirli anlamları olan grafiksel semboller kullanır. En temel yapı taşları şunlardır:
 
-Yapısal Şeyler: Modelin statik kısımları (örn: Sınıf, Arayüz, Bileşen, Düğüm).
+'* Şeyler (Things): 
+'  Modelin temel soyutlamalarıdır.
 
-Davranışsal Şeyler: Modelin dinamik kısımları (örn: Etkileşim, Durum Makinesi).
+'* Yapısal Şeyler: 
+'  Modelin statik kısımları (örn: Sınıf, Arayüz, Bileşen, Düğüm).
 
-Gruplama Şeyleri: Modelin düzenlenmesine yardımcı olan mekanizmalar (örn: Paket).
+'* Davranışsal Şeyler: 
+'  Modelin dinamik kısımları (örn: Etkileşim, Durum Makinesi).
 
-Açıklayıcı Şeyler: Modele notlar ve açıklamalar eklemek için (örn: Not).
+'* Gruplama Şeyleri: 
+'  Modelin düzenlenmesine yardımcı olan mekanizmalar (örn: Paket).
 
-İlişkiler (Relationships): Şeylerin birbirleriyle nasıl bağlantılı olduğunu gösterir.
+'* Açıklayıcı Şeyler: 
+'  Modele notlar ve açıklamalar eklemek için (örn: Not).
 
-Bağımlılık (Dependency): Bir şeydeki değişikliğin başka bir şeyi etkileyebileceğini gösterir.
+'* İlişkiler (Relationships): 
+'  Şeylerin birbirleriyle nasıl bağlantılı olduğunu gösterir.
 
-İlişkilendirme (Association): İki veya daha fazla sınıfın nesneleri arasındaki yapısal bir ilişkiyi gösterir.
+'* Bağımlılık (Dependency): 
+'  Bir şeydeki değişikliğin başka bir şeyi etkileyebileceğini gösterir.
 
-Genelleştirme (Generalization / Inheritance): Bir sınıfın (alt sınıf) başka bir sınıftan (üst sınıf) miras aldığını gösterir ("bir ...dır" ilişkisi).
+'* İlişkilendirme (Association): 
+'  İki veya daha fazla sınıfın nesneleri arasındaki yapısal bir ilişkiyi gösterir.
 
-Gerçekleştirme (Realization / Implementation): Bir sınıfın bir arayüzü (interface) uyguladığını gösterir.
+'* Genelleştirme (Generalization / Inheritance): 
+'  Bir sınıfın (alt sınıf) başka bir sınıftan (üst sınıf) miras aldığını gösterir ("bir ...dır" ilişkisi).
 
-Toplama (Aggregation): Bir "bütün-parça" ilişkisini gösterir (parçalar bütünden bağımsız yaşayabilir).
+'* Gerçekleştirme (Realization / Implementation): 
+'  Bir sınıfın bir arayüzü (interface) uyguladığını gösterir.
 
-Birleşim (Composition): Daha güçlü bir "bütün-parça" ilişkisini gösterir (parçalar bütüne sıkı sıkıya bağlıdır ve bütün yok olursa parçalar da genellikle yok olur).
+'* Toplama (Aggregation): 
+'  Bir "bütün-parça" ilişkisini gösterir (parçalar bütünden bağımsız yaşayabilir).
 
-Diyagramlar (Diagrams): Sistemin farklı açılardan görünümlerini sunan grafiksel temsillerdir.
+'* Birleşim (Composition): 
+'  Daha güçlü bir "bütün-parça" ilişkisini gösterir (parçalar bütüne sıkı sıkıya bağlıdır ve bütün yok olursa parçalar da genellikle yok olur).
 
-
-1.3. UML Diyagram Türleri
-UML 2.x'te 14 farklı diyagram türü bulunmaktadır. Bunlar genellikle iki ana kategoriye ayrılır:
-
-A. Yapısal Diyagramlar (Structural Diagrams): 
-Sistemin statik yapısını, yani sistemin hangi parçalardan oluştuğunu ve bu parçaların birbirleriyle
-nasıl ilişkili olduğunu gösterir. Değişmeyen yönleri vurgular.
-
-Sınıf Diyagramı (Class Diagram): 
-(Bu dersin ana odaklarından biri) Sistemdeki sınıfları, niteliklerini, metotlarını ve aralarındaki ilişkileri gösterir.
-
-Nesne Diyagramı (Object Diagram): 
-(Bu dersin ana odaklarından biri) Belirli bir anda sistemdeki nesnelerin (sınıf örneklerinin)
-ve aralarındaki ilişkilerin bir anlık görüntüsünü gösterir.
-
-Bileşen Diyagramı (Component Diagram):
-Sistemin fiziksel bileşenlerini ve aralarındaki bağımlılıkları gösterir.
-
-Dağılım Diyagramı (Deployment Diagram): 
-Sistemin donanım düğümlerini (sunucular, cihazlar) ve bu düğümlere dağıtılan yazılım bileşenlerini gösterir.
-
-Paket Diyagramı (Package Diagram): 
-Modelin elemanlarını mantıksal gruplar (paketler) halinde düzenler ve aralarındaki bağımlılıkları gösterir.
-
-Profil Diyagramı (Profile Diagram): 
-UML'i belirli alanlara veya platformlara uyarlamak için kullanılan özel stereotipler, etiketli değerler ve kısıtlamalar tanımlar.
-
-Birleşik Yapı Diyagramı (Composite Structure Diagram): 
-Bir sınıfın veya bileşenin iç yapısını, parçalarını ve bu parçaların birbirleriyle nasıl etkileştiğini gösterir.
+'* Diyagramlar (Diagrams): 
+'  Sistemin farklı açılardan görünümlerini sunan grafiksel temsillerdir.
 
 
-B. Davranışsal Diyagramlar (Behavioral Diagrams): 
-Sistemin dinamik davranışını, yani sistemin zaman içinde nasıl değiştiğini ve elemanlarının nasıl
-etkileşimde bulunduğunu gösterir. Değişen yönleri vurgular.
+'! 1.3. UML Diyagram Türleri
+'  UML 2.x'te 14 farklı diyagram türü bulunmaktadır. Bunlar genellikle iki ana kategoriye ayrılır:
 
-Kullanım Senaryosu Diyagramı (Use Case Diagram): 
-(Bu dersin ana odaklarından biri) Sistemin dış aktörler (kullanıcılar veya diğer sistemler) tarafından 
-nasıl kullanıldığını, sistemin sunduğu işlevselliği (kullanım senaryolarını) ve aktörlerle olan ilişkilerini gösterir.
+'? A. Yapısal Diyagramlar (Structural Diagrams): 
+'  Sistemin statik yapısını, yani sistemin hangi parçalardan oluştuğunu ve bu parçaların birbirleriyle
+'  nasıl ilişkili olduğunu gösterir. Değişmeyen yönleri vurgular.
 
-Etkinlik Diyagramı (Activity Diagram): 
-(Bu dersin ana odaklarından biri) Bir süreçteki veya bir operasyondaki iş akışını, adımları, 
-karar noktalarını ve paralel işlemleri adım adım gösterir.
-Genellikle iş süreçlerini veya karmaşık algoritmaları modellemek için kullanılır.
+'* Sınıf Diyagramı (Class Diagram): 
+'  (Bu dersin ana odaklarından biri) Sistemdeki sınıfları, niteliklerini, metotlarını ve aralarındaki ilişkileri gösterir.
 
-Sıralama Diyagramı (Sequence Diagram): 
-(Bu dersin ana odaklarından biri) Nesneler arasındaki etkileşimlerin zaman içindeki sırasını gösterir.
-Belirli bir senaryo için nesnelerin birbirlerine nasıl mesaj gönderdiğini vurgular.
+'* Nesne Diyagramı (Object Diagram): 
+'  (Bu dersin ana odaklarından biri) Belirli bir anda sistemdeki nesnelerin (sınıf örneklerinin)
+'  ve aralarındaki ilişkilerin bir anlık görüntüsünü gösterir.
 
-Durum Makinesi Diyagramı (State Machine Diagram / Statechart Diagram): 
-Bir nesnenin yaşam döngüsü boyunca geçebileceği farklı durumları ve bu durumlar arasındaki geçişleri tetikleyen olayları gösterir.
+'* Bileşen Diyagramı (Component Diagram):
+'  Sistemin fiziksel bileşenlerini ve aralarındaki bağımlılıkları gösterir.
 
-İletişim Diyagramı (Communication Diagram / Collaboration Diagram): 
-Sıralama diyagramına benzer şekilde nesneler arasındaki etkileşimleri gösterir, 
-ancak zaman sırası yerine nesneler arasındaki yapısal ilişkilere odaklanır.
+'* Dağılım Diyagramı (Deployment Diagram): 
+'  Sistemin donanım düğümlerini (sunucular, cihazlar) ve bu düğümlere dağıtılan yazılım bileşenlerini gösterir.
 
-Etkileşim Genel Bakış Diyagramı (Interaction Overview Diagram): 
-Farklı etkileşim diyagramlarını (sıralama, iletişim, zamanlama) bir araya getirerek karmaşık etkileşimlerin
-genel bir görünümünü sunar. Etkinlik diyagramına benzer bir notasyon kullanır.
+'* Paket Diyagramı (Package Diagram): 
+'  Modelin elemanlarını mantıksal gruplar (paketler) halinde düzenler ve aralarındaki bağımlılıkları gösterir.
 
-Zamanlama Diyagramı (Timing Diagram):
-Nesnelerin durumlarının zaman içindeki değişimini ve nesneler arasındaki 
-zaman kısıtlamalı etkileşimleri hassas bir şekilde gösterir.
+'* Profil Diyagramı (Profile Diagram): 
+'  UML'i belirli alanlara veya platformlara uyarlamak için kullanılan özel stereotipler, etiketli değerler ve kısıtlamalar tanımlar.
+
+'* Birleşik Yapı Diyagramı (Composite Structure Diagram): 
+'  Bir sınıfın veya bileşenin iç yapısını, parçalarını ve bu parçaların birbirleriyle nasıl etkileştiğini gösterir.
+
+
+'? B. Davranışsal Diyagramlar (Behavioral Diagrams): 
+'  Sistemin dinamik davranışını, yani sistemin zaman içinde nasıl değiştiğini ve elemanlarının nasıl
+'  etkileşimde bulunduğunu gösterir. Değişen yönleri vurgular.
+
+'* Kullanım Senaryosu Diyagramı (Use Case Diagram): 
+'  (Bu dersin ana odaklarından biri) Sistemin dış aktörler (kullanıcılar veya diğer sistemler) tarafından 
+'  nasıl kullanıldığını, sistemin sunduğu işlevselliği (kullanım senaryolarını) ve aktörlerle olan ilişkilerini gösterir.
+
+'* Etkinlik Diyagramı (Activity Diagram): 
+'  (Bu dersin ana odaklarından biri) Bir süreçteki veya bir operasyondaki iş akışını, adımları, 
+'  karar noktalarını ve paralel işlemleri adım adım gösterir.
+'  Genellikle iş süreçlerini veya karmaşık algoritmaları modellemek için kullanılır.
+
+'* Sıralama Diyagramı (Sequence Diagram): 
+'  (Bu dersin ana odaklarından biri) Nesneler arasındaki etkileşimlerin zaman içindeki sırasını gösterir.
+'  Belirli bir senaryo için nesnelerin birbirlerine nasıl mesaj gönderdiğini vurgular.
+
+'* Durum Makinesi Diyagramı (State Machine Diagram / Statechart Diagram): 
+'  Bir nesnenin yaşam döngüsü boyunca geçebileceği farklı durumları ve bu durumlar arasındaki geçişleri tetikleyen olayları gösterir.
+
+'* İletişim Diyagramı (Communication Diagram / Collaboration Diagram): 
+'  Sıralama diyagramına benzer şekilde nesneler arasındaki etkileşimleri gösterir, 
+'  ancak zaman sırası yerine nesneler arasındaki yapısal ilişkilere odaklanır.
+
+'* Etkileşim Genel Bakış Diyagramı (Interaction Overview Diagram): 
+'  Farklı etkileşim diyagramlarını (sıralama, iletişim, zamanlama) bir araya getirerek karmaşık etkileşimlerin
+'  genel bir görünümünü sunar. Etkinlik diyagramına benzer bir notasyon kullanır.
+
+'* Zamanlama Diyagramı (Timing Diagram):
+'  Nesnelerin durumlarının zaman içindeki değişimini ve nesneler arasındaki 
+'  zaman kısıtlamalı etkileşimleri hassas bir şekilde gösterir.
