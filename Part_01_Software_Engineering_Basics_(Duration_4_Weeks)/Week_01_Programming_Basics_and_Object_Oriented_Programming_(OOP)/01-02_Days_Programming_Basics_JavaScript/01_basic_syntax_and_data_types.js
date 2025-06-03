@@ -69,7 +69,7 @@
   //? String (Metin): Karakter dizileridir. Tek tırnak ('...'), çift tırnak ("...") veya backtick (`...`) ile tanımlanır.
   let name = "Ahmet";
   let message = "Merhaba!";
-  let description = `Bu bir "template literal" örneğidir. Değişkenler: ${isim}`; // Template Literals (ES6)
+  let description = `Bu bir "template literal" örneğidir. Değişkenler: ${name}`; // Template Literals (ES6)
   console.log(typeof name); // "string"
 
   //? Number (Sayı): Tamsayılar ve ondalıklı sayıları temsil eder. Özel sayısal değerler de vardır:
@@ -122,7 +122,7 @@
     },
   };
   console.log(car.brand); // "BMW"
-  car.calistir(); // "Motor çalıştı!"
+  car.run(); // "Motor çalıştı!"
   console.log(typeof car); // "object"
 
   //? Array (Dizi): Sıralı bir değerler listesidir. Farklı veri tiplerini içerebilir.
