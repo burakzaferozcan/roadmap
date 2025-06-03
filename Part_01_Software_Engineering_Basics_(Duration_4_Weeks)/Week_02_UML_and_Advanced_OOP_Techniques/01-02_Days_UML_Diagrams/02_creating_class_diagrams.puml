@@ -1,0 +1,92 @@
+'TODO Bölüm 2: Sınıf Diyagramları (Class Diagrams)
+/'
+ '? Amaç:
+ ' Sistemdeki sınıfları, bu sınıfların özelliklerini (attributes), operasyonlarını (methods) ve sınıflar arasındaki
+ ' statik ilişkileri (kalıtım, ilişkilendirme, bağımlılık vb.) modellemek.
+ ' Nesne Yönelimli Programlama (OOP) tasarımlarının bel kemiğidir.
+ '
+ '? Ne Zaman Kullanılır?:
+ '  1- Bir sistemin statik yapısını anlamak ve belgelemek için.
+ '  2- Veritabanı şemalarını tasarlamak için.
+ '  3- OOP prensiplerine göre yazılım geliştirmeden önce tasarımı planlamak için.
+ '/
+
+'! 2.1. Temel Sınıf Gösterimi
+'  Bir sınıf, genellikle üç bölüme ayrılmış bir dikdörtgen ile temsil edilir:
+
+'* Sınıf Adı (Class Name):
+'  En üst bölüm. Kalın (bold) yazılır ve genellikle baş harfi büyüktür (PascalCase). Soyut sınıfların adı italik yazılabilir.
+
+'* Özellikler (Attributes):
+'  Orta bölüm. Sınıfın sahip olduğu verileri temsil eder.
+'? Gösterim: 
+'  görünürlük adı: tipi = varsayılanDeğer {kısıtlamalar}
+'? Görünürlük (Visibility):
+'  + : public (her yerden erişilebilir)
+'  - : private (sadece sınıf içinden erişilebilir)
+'  # : protected (sınıf içinden ve alt sınıflardan erişilebilir)
+'  ~ : package (aynı paket içindeki sınıflardan erişilebilir - Java'ya özgü, UML'de genellikle kullanılmaz veya yorumlanır)
+'? Örnek:
+'  - kullaniciAdi: String, + bakiye: double = 0.0
+
+'* Operasyonlar/Metotlar (Operations/Methods): 
+'  En alt bölüm. Sınıfın gerçekleştirebileceği eylemleri temsil eder.
+'? Gösterim: 
+'  görünürlük adı(parametreListesi): dönüşTipi {kısıtlamalar}
+'? Parametre Listesi: 
+'  paramAdi: paramTipi = varsayılanDeğer
+'? Örnek: 
+' + paraYatir(miktar: double): boolean, - sifreKontrolEt(girilenSifre: String): boolean
+
+class BankAccount {
+   -accountNumber: String
+   -accountOwner: String
+   #balance: double = 0.0
+   +BankAccount(accountNum: String, owner: String)
+   +depositMoney(quantity: double): void
+   +withdrawMoney(quantity: double): boolean
+   +getBalance(): double
+   -logProcess(message: String): void
+}
+
+' BankAccount adlı bir sınıf.
+' accountNumber (private, String), accountOwner (private, String), balance (protected, double, varsayılan 0.0) özellikleri.
+' BankAccount (public constructor), depositMoney (public, void), withdrawMoney (public, boolean), getBalance (public, double) operasyonları.
+' logProcess (private, void) operasyonu.
+
+'! 2.2. Sınıflar Arasındaki İlişkiler
+
+'* A. İlişkilendirme (Association):
+/'  İki veya daha fazla sınıfın nesneleri arasında yapısal bir bağlantıyı temsil eder.
+ '  Genellikle bir sınıfın diğerine "sahip olduğu" veya "kullandığı" anlamına gelir.
+ '/
+'  Düz bir çizgi ile gösterilir.
+
+'? Rol Adları:
+'  Çizginin uçlarına, bir sınıfın ilişkilendirmedeki rolünü belirten isimler yazılabilir.
+
+'? Çokluk (Multiplicity / Cardinality):
+'  Her bir sınıfın kaç örneğinin ilişkiye katılabileceğini belirtir.
+'todo  1 : Tam olarak bir tane
+'todo  0..1 : Sıfır veya bir tane
+'todo  * veya 0..* : Sıfır veya daha fazla
+'todo  1..* : Bir veya daha fazla
+'todo  m..n : m ile n arasında (m ve n dahil)
+
+'? Yönlü İlişkilendirme:
+'  Ok ucu, navigasyonun yönünü (bir sınıftan diğerine erişimin kolay olduğu yönü) gösterebilir.
+
+'? İlişkilendirme Sınıfı (Association Class):
+/' İki sınıf arasındaki bir ilişkilendirmenin kendine ait özellikleri veya operasyonları olduğunda kullanılır.
+ ' İlişkilendirme çizgisine kesikli bir çizgiyle bağlanan bir sınıf olarak gösterilir.
+ '/
+
+Student "1" -- "0..*" Course : enrolledIn  
+Student : +studentNo: String  
+Course : +courseCode: String  
+
+Order "1" -- "1..*" OrderItem : contains  
+OrderItem "0..*" -- "1" Product : productDetail  
+
+' Bir Student sıfır veya daha fazla Course'e kayıtlı olabilir. Bir Course'in bir student'i olabilir (bu gösterimde Course tarafından Student'ye olan çokluk belirtilmemiş, tek yönlü olarak yorumlanabilir veya 1..* gibi bir çokluk eklenebilir).
+' Bir Order bir veya daha fazla OrderItem içerir. Her OrderItem bir Product ile ilgilidir.
