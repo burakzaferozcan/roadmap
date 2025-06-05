@@ -38,16 +38,24 @@
 '? Örnek: 
 ' + paraYatir(miktar: double): boolean, - sifreKontrolEt(girilenSifre: String): boolean
 
-class BankAccount {
-   -accountNumber: String
-   -accountOwner: String
-   #balance: double = 0.0
-   +BankAccount(accountNum: String, owner: String)
-   +depositMoney(quantity: double): void
-   +withdrawMoney(quantity: double): boolean
-   +getBalance(): double
-   -logProcess(message: String): void
-}
+'  classDiagram
+   class BankAccount {
+      -accountNumber: String
+      -accountOwner: String
+      #balance: double = 0.0
+      +BankAccount(accountNum: String, owner: String)
+      +depositMoney(quantity: double): void
+      +withdrawMoney(quantity: double): boolean
+      +getBalance(): double
+      -logProcess(message: String): void
+   }
+
+'  classDiagram
+   class Teacher {
+      -teacherNumber: String
+      -lessons: String[]
+      +study(): void
+   }
 
 ' BankAccount adlı bir sınıf.
 ' accountNumber (private, String), accountOwner (private, String), balance (protected, double, varsayılan 0.0) özellikleri.
@@ -81,6 +89,7 @@ class BankAccount {
  ' İlişkilendirme çizgisine kesikli bir çizgiyle bağlanan bir sınıf olarak gösterilir.
  '/
 
+'  classDiagram
 Student "1" -- "0..*" Course : enrolledIn  
 Student : +studentNo: String  
 Course : +courseCode: String  
@@ -90,3 +99,142 @@ OrderItem "0..*" -- "1" Product : productDetail
 
 ' Bir Student sıfır veya daha fazla Course'e kayıtlı olabilir. Bir Course'in bir student'i olabilir (bu gösterimde Course tarafından Student'ye olan çokluk belirtilmemiş, tek yönlü olarak yorumlanabilir veya 1..* gibi bir çokluk eklenebilir).
 ' Bir Order bir veya daha fazla OrderItem içerir. Her OrderItem bir Product ile ilgilidir.
+
+'* B. Genelleştirme / Kalıtım (Generalization / Inheritance):
+'  1- "Bir ...dır" (is-a) ilişkisini gösterir. Alt sınıf (child/subclass), üst sınıfın (parent/superclass) özelliklerini ve operasyonlarını miras alır.
+'  2- İçi boş bir üçgen ok ucu ile gösterilir. Ok, alt sınıftan üst sınıfa doğru yönelir.
+
+'  classDiagram
+   Animal <|-- Cat
+   Animal <|-- Dog
+   Animal : +name: String
+   Animal : +eat()
+   Cat : +meow()
+   Dog : +bark()
+'?  Cat bir Animal'dır. Dog bir Animal'dır.
+
+'  classDiagram
+   class Electronic{
+      +price: double
+      +stock: int 
+   }
+   Electronic <|-- Phone 
+   Electronic <|-- Computer
+'?  Phone bir Electronic'dır. Computer bir Electronic'dır.
+
+
+'* C. Gerçekleştirme / Uygulama (Realization / Implementation):
+'  1- Bir sınıfın bir arayüzü (interface) uyguladığını gösterir.
+'  Interface, operasyon imzalarını tanımlar ancak implementasyonlarını sağlamaz.
+'  2- Kesikli bir çizgi ve içi boş bir üçgen ok ucu ile gösterilir. Ok, uygulayan sınıftan arayüze doğru yönelir.
+'  3- Arayüzler genellikle <<interface>> stereotipi ile veya sadece isimleriyle (italik olabilir) gösterilir.
+
+'  classDiagram
+   interface Flyable
+   Flyable : +fly()
+   Bird --|> Flyable : implements
+   Airplane --|> Flyable : implements
+   Bird : +flapWings()
+   Airplane : +startEngine()
+'?  Bird ve Airplane sınıfları Flyable Interface'ini uygular.
+
+'  classDiagram
+   interface Runable {
+      +run()
+   }
+   class Human {
+     +shout()
+   }
+   Human --|> Runable : implements
+   class Leon {
+     +roar()
+   }
+   Leon --|> Runable : implements
+'?  Human ve Leon sınıfları Runable Interface'ini uygular.
+
+
+'*  D. Bağımlılık (Dependency):
+'  1- Bir sınıfın (istemci) başka bir sınıfa (tedarikçi) bir şekilde bağımlı olduğunu,
+'  tedarikçi sınıftaki bir değişikliğin istemci sınıfı etkileyebileceğini gösterir.
+'  Genellikle bir sınıfın bir metodu, başka bir sınıf türünden bir parametre aldığında veya 
+'  bir nesne oluşturduğunda ortaya çıkar.
+'  2- Kesikli bir çizgi ve açık bir ok ucu ile gösterilir. Ok, bağımlı olan sınıftan bağımlı olduğu sınıfa doğru yönelir.
+
+'  classDiagram
+   OrderProcessor ..> PaymentService : uses
+   OrderProcessor : +confirmOrder(siparis: Siparis)
+   PaymentService : +makePayment(amount: double)
+'? OrderProcessor sınıfı, PaymentService sınıfına bağımlıdır (onu kullanır).
+
+   class OrderProcessor2 {
+      +confirmOrder(order: Order)
+   }
+   class PaymentService2 {
+     +makePayment(amount: double)
+   }
+   OrderProcessor2 ..> PaymentService2 : uses
+'? OrderProcessor2 sınıfı, PaymentService2 sınıfına bağımlıdır (onu kullanır).
+
+'* E. Toplama (Aggregation):
+'  1- "Sahiptir" (has-a) veya "bir parçasıdır" (part-of) ilişkisinin zayıf bir formudur.
+'  Parçalar, bütünden bağımsız olarak var olabilirler. Bütün silinse bile parçalar varlığını sürdürebilir.
+'  2- Bütün tarafında içi boş bir eşkenar dörtgen (diamond) bulunan düz bir çizgi ile gösterilir.
+
+'  classDiagram
+   Department o-- Professor : employees
+   Department : +departmentName: String
+   Professor : +professorName: String
+'  Bir Department'ın Professor çalışanları vardır. Department kapatılsa bile öğretim üyeleri başka bir departmanda var olabilir.
+
+   class Department2 {
+     +departmentName: String
+   }
+   class Professor2 {
+     +professorName: String
+   }
+   Department2 o-- Professor2 : employees
+'  Bir Department2'ın Professor2 çalışanları vardır. Department2 kapatılsa bile öğretim üyeleri başka bir departmanda var olabilir.
+
+
+'* F. Birleşim (Composition):
+'  1- "Sahiptir" (has-a) veya "bir parçasıdır" (part-of) ilişkisinin güçlü bir formudur.
+'  Parçaların yaşam döngüsü bütüne sıkı sıkıya bağlıdır. Bütün silindiğinde parçalar da genellikle silinir.
+'  2- Bütün tarafında içi dolu bir eşkenar dörtgen (diamond) bulunan düz bir çizgi ile gösterilir.
+   
+   Home : +address: String
+   Room : +roomNumber: int
+   Home *-- Room : rooms
+'? Bir Home'in Odaları vardır. Home yıkılırsa odalar da varlığını yitirir.
+
+   class Home2 {
+      +address: String
+   }
+   class Room2 {
+      +roomNumber: int
+   }
+   Home2 *-- Room2 : rooms
+'? Bir Home2'in Odaları vardır. Home2 yıkılırsa odalar da varlığını yitirir.
+
+
+'! 2.3. Diğer Sınıf Diyagramı Kavramları
+
+'* Soyut Sınıf (Abstract Class) ve Soyut Metot (Abstract Method):
+'  1- Soyut sınıf: Doğrudan örneği oluşturulamayan sınıftır.
+'  Genellikle alt sınıflar için ortak bir arayüz ve kısmi implementasyon sağlar.
+'  Sınıf adı italik yazılır veya {abstract} etiketi eklenir.
+'  2- Soyut metot: Implementasyonu olmayan, sadece imzası tanımlanmış metottur.
+'  Alt sınıflar tarafından override edilmek zorundadır.
+'  Metot adı italik yazılır veya {abstract} etiketi eklenir.
+
+'* Arayüz (Interface): 
+'  1- Sadece operasyon imzalarını (ve bazen sabitleri) içeren, implementasyon sunmayan bir tanımdır.
+'  Sınıflar tarafından realization ilişkisi ile uygulanır.
+'  <<interface>> stereotipi ile gösterilir.
+
+'* Stereotipler (Stereotypes):
+'  1- UML elemanlarını daha spesifik anlamlarla genişletmek için kullanılır. 
+'  << >> (guillemets) içine yazılır. Örn: <<interface>>, <<enumeration>>, <<utility>>.
+
+'* Notlar (Notes): 
+'  1- Diyagrama açıklayıcı metinler eklemek için kullanılır.
+'  Bir dikdörtgenin sağ üst köşesi kıvrık olarak çizilir ve kesikli bir çizgiyle ilgili elemana bağlanır.
