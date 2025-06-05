@@ -1,0 +1,70 @@
+'TODO Bölüm 3: Nesne Diyagramları (Object Diagrams)
+/'
+ '? Amaç:
+ ' Belirli bir anda sistemdeki nesnelerin (sınıf örneklerinin), bu nesnelerin özellik değerlerinin ve
+ ' aralarındaki ilişkilerin somut bir anlık görüntüsünü modellemek.
+ ' Sınıf diyagramındaki soyut tanımların nasıl somutlaştığını gösterir.
+ '
+ '? Ne Zaman Kullanılır?:
+ '  1- Karmaşık sınıf yapılarının anlaşılmasını kolaylaştırmak için örnek senaryolar göstermek.
+ '  2- Sınıf diyagramındaki ilişkilerin ve çoklukların doğruluğunu test etmek.
+ '  3- Belirli bir sistem durumunu veya bir test senaryosunu belgelemek.
+ '/
+
+'! 3.1. Temel Nesne Gösterimi
+'  Bir nesne, genellikle iki bölüme ayrılmış bir dikdörtgen ile temsil edilir ve adı altı çizilidir:
+
+'* Nesne Adı ve Sınıfı (Object Name and Class): En üst bölüm.
+'  Gösterim: nesneAdi : SinifAdi (Her ikisi de altı çizili)
+'  Eğer nesne adı belirtilmemişse (anonim nesne): : SinifAdi (Sadece sınıf adı altı çizili)
+
+'* Özellik Değerleri (Attribute Values): Alt bölüm (isteğe bağlı). Nesnenin o andaki özellik değerlerini gösterir.
+'  Gösterim: ozellikAdi = deger
+
+object "std1 : Student" as std1 {
+  studentNo = "101"
+  name = "Ali Can"
+}
+
+object "Lesson" as lesson {
+  lessonNo = "CS101"
+  lessonName = "Programlamaya Giriş"
+}
+'? std1 adında, Student sınıfından bir nesne. studentNo özelliği "101", name özelliği "Ali Can".
+'? Anonim bir Lesson nesnesi.
+
+'! 3.2. Nesneler Arasındaki Bağlantılar (Links)
+'  1- Nesneler arasındaki ilişkiler (sınıf diyagramındaki ilişkilendirmelerin örnekleri) "bağlantı" (link) olarak adlandırılır.
+'  2- Düz bir çizgi ile gösterilir.
+'  3- Bağlantılar, sınıf diyagramındaki ilişkilendirme adlarını ve rollerini yansıtabilir.
+
+' Örnek Nesne Diyagramı:
+' Aşağıdaki sınıf diyagramını düşünelim:
+
+Company "1" -- "0..*" Employee : employs
+Company : +companyName: String
+Employee : +employeeName: String
+Employee : +position: String
+
+' Bunun bir nesne diyagramı örneği:
+
+object "acmeCorp : Company" as acmeCorp {
+  companyName = "Acme Corporation"
+}
+
+object "alice : Employee" as alice {
+  employeeName = "Alice Smith"
+  position = "Engineer"
+}
+
+object "john : Employee" as john {
+  employeeName = "John Doe"
+  position = "Analyst"
+}
+
+acmeCorp -- alice : "employs"
+acmeCorp -- john : "employs"
+
+'? acmeCorp adlı Company nesnesi, alice ve john adlı Employee nesnelerini "employs" ilişkisiyle bağlıdır.
+
+' Nesne diyagramları, sınıf diyagramlarının soyutluğunu somut örneklerle pekiştirir.
