@@ -1,0 +1,128 @@
+
+'TODO Bölüm 6: Sıralama Diyagramları (Sequence Diagrams)
+/'
+ '? Amaç:
+ ' Belirli bir senaryo veya kullanım durumu için nesneler (veya roller) arasındaki etkileşimlerin
+ ' zaman içindeki sırasını göstermek. Hangi nesnenin hangi metodu ne zaman çağırdığını ve 
+ ' mesajların nasıl iletildiğini vurgular.
+ '
+ '? Ne Zaman Kullanılır?:
+ '  1- Bir kullanım senaryosunun veya karmaşık bir operasyonun mantığını detaylandırmak.
+ '  2- Nesneler arasındaki mesajlaşma akışını anlamak ve belgelemek.
+ '  3- Sistemdeki sorumlulukların nasıl dağıtıldığını görmek.
+ '  4- Dağıtık sistemlerde veya çoklu servis etkileşimlerinde mesaj akışını modellemek.
+ '/
+
+'! 6.1. Temel Elemanlar
+
+'* Yaşam Çizgisi (Lifeline):
+'  1- Diyagramın üst kısmında bir dikdörtgen (içinde nesne/rol adı) ve 
+'  bu dikdörtgenden aşağı doğru uzanan dikey kesikli bir çizgiden oluşur.
+'  2- Bir katılımcıyı (nesne, sınıf, aktör) temsil eder.
+'  3- Gösterim: rolAdi:SinifAdi (altı çizili olabilir veya olmayabilir, araçlara göre değişir).
+
+'* Aktivasyon Çubuğu / Odak Kontrolü (Activation Bar / Focus of Control):
+'  1- Yaşam çizgisi üzerinde, nesnenin bir işlemi gerçekleştirdiği (aktif olduğu)
+'  zaman aralığını gösteren dar bir dikdörtgendir.
+
+'* Mesaj (Message):
+'  1- Katılımcılar arasındaki iletişimi temsil eder. Bir yaşam çizgisinden diğerine doğru yönlü bir ok ile gösterilir.
+'  2- Senkron Mesaj (Synchronous Message): 
+'  Gönderici, alıcıdan bir yanıt gelene kadar bekler. İçi dolu bir ok ucu ile gösterilir.
+'  Genellikle metot çağrılarını temsil eder.
+'  3- Asenkron Mesaj (Asynchronous Message): 
+'  Gönderici, mesajı gönderdikten sonra beklemeksizin kendi işlemlerine devam eder. Açık bir ok ucu ile gösterilir.
+'  4- Yanıt Mesajı (Reply / Return Message):
+'  Bir senkron mesajın sonucunu göndericiye geri döndürür. Kesikli bir çizgi ve açık bir ok ucu ile gösterilir.
+'  Genellikle isteğe bağlıdır, senkron mesajın tamamlanmasıyla zımni olarak anlaşılabilir.
+'  5- Kendi Kendine Mesaj (Self-Message / Recursive Message): 
+'  Bir nesnenin kendi metotlarından birini çağırdığını gösterir.
+'  Yaşam çizgisinden başlayıp yine aynı yaşam çizgisine dönen bir ok ile gösterilir.
+'  6- Oluşturma Mesajı (Create Message): 
+'  Yeni bir nesne oluşturur. Hedef nesnenin yaşam çizgisinin başladığı yere (dikdörtgenine)
+'  doğru kesikli bir ok ve <<create>> stereotipi ile gösterilir.
+'  7- Yok Etme Mesajı (Destroy Message): 
+'  Bir nesneyi yok eder. Hedef nesnenin yaşam çizgisinin sonuna (genellikle bir 'X' işaretiyle)
+'  doğru bir ok ve <<destroy>> stereotipi ile gösterilir.
+
+'* Etkileşim Parçacıkları (Interaction Fragments):
+'  1- Diyagramın belirli bölümlerini koşullu mantık, döngüler veya paralel yürütmeler için çerçevelemek için kullanılır.
+'  2- alt (Alternatifler): if-else benzeri koşullu bloklar.
+'  3- opt (Opsiyonel): Koşul doğruysa çalışacak isteğe bağlı bir blok.
+'  4- loop (Döngü): Belirli bir koşul sağlandığı sürece veya belirli sayıda tekrarlanan bir blok.
+'  5- par (Paralel): Aynı anda çalışan bloklar.
+'  6- ref (Referans): Başka bir sıralama diyagramına referans.
+
+'! 6.2. Örnek Sıralama Diyagramı (Kullanıcı Giriş Senaryosu)
+
+' sequenceDiagram
+actor User
+participant "UI" as UI
+participant "LoginService" as LoginService
+participant "DB" as Database
+
+User -> UI: enters(username, password)
+activate UI
+UI -> LoginService: login(username, password)
+activate LoginService
+LoginService -> Database: validateUser(username, hashedPassword)
+activate Database
+Database --> LoginService: userInfo / null
+deactivate Database
+
+alt User Validated
+    LoginService --> UI: authToken
+    UI --> User: Login Successful
+else User Not Validated
+    LoginService --> UI: errorMessage
+    UI --> User: Login Failed
+end
+deactivate LoginService
+deactivate UI
+
+'* Katılımcılar: 
+'  User (Aktör), Arayuz (UI), LoginService, Database (DB).
+'* Akış:
+'  1- User, UI'a kullanıcı username ve password girer.
+'  2- UI, LoginService'nin login metodunu çağırır.
+'  3- LoginService, DB'nin validateUser metodunu çağırır.
+'  4- DB, doğrulama sonucunu LoginService'ne yanıt olarak döner.
+'  5- alt bloğu ile koşullu mantık:
+'    a- Eğer kullanıcı doğrulandıysa, token üretilir ve başarılı mesajı kullanıcıya iletilir.
+'    b- Eğer doğrulanamadıysa, hata mesajı kullanıcıya iletilir.
+'  6- + ve - sembolleri aktivasyon çubuklarının başlangıcını ve bitişini gösterir.
+
+
+'! İleri Seviye İpuçları ve En İyi Pratikler:
+
+'* Doğru Diyagramı Seçin:
+'  1- Hangi bilgiyi iletmek istediğinize bağlı olarak uygun diyagram türünü seçin.
+'  Her şeyi tek bir diyagramda göstermeye çalışmayın.
+
+'* Basit Tutun:
+'  1- Diyagramlar karmaşıklaştıkça anlaşılırlığı azalır. Gerekirse diyagramı daha küçük,
+'  yönetilebilir parçalara bölün (ref ile sıralama diyagramlarında veya paketlerle sınıf diyagramlarında).
+
+'* Tutarlı Olun:
+'  1- Kullandığınız gösterimlerde ve isimlendirmelerde tutarlı olun.
+
+'* Hedef Kitlenizi Düşünün: 
+'  1- Diyagramı kimin okuyacağını göz önünde bulundurun ve onların anlayabileceği bir detay seviyesi kullanın.
+'  Teknik olmayan paydaşlar için kullanım senaryosu ve basit etkinlik diyagramları daha uygun olabilir.
+
+'* Araç Kullanın: 
+'  1- Elle çizmek yerine UML modelleme araçları (PlantUML, StarUML, Visual Paradigm, Lucidchart, draw.io vb.)
+'  kullanmak daha verimli ve profesyoneldir. Bu araçlar genellikle diyagramları doğrulamaya ve
+'  farklı formatlarda dışa aktarmaya da olanak tanır. (3-4. günlerde PlantUML'e değineceğiz).
+
+'* UML Bir Araçtır, Amaç Değil: 
+'  1- UML diyagramları, daha iyi yazılımlar tasarlamak ve iletişim kurmak için bir araçtır.
+'  Diyagram çizmek için diyagram çizmeyin. Gerçek bir amaca hizmet etmelidir.
+
+'* Yinelemeli Yaklaşım: 
+'  1- Diyagramları ilk seferde mükemmel yapmak zorunda değilsiniz. Tasarım geliştikçe diyagramlarınızı güncelleyin.
+
+'? 1- Bu iki günlük yoğun UML çalışması, yazılım sistemlerini daha iyi anlamanız, tasarlamanız ve
+'? belgelemeniz için size güçlü bir temel sağlayacaktır. 
+'? Her diyagram türü için kendi küçük senaryolarınızı çizmeye çalışarak pratik yapın.
+
