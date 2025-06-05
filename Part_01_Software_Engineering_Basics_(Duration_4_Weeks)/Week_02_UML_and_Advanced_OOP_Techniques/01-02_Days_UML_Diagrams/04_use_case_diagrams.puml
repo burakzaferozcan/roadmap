@@ -1,0 +1,78 @@
+'TODO Bölüm 4: Kullanım Senaryosu Diyagramları (Use Case Diagrams)
+/'
+ '? Amaç:
+ ' Bir sistemin dış aktörler (kullanıcılar, diğer sistemler) tarafından nasıl kullanıldığını,
+ ' sistemin sunduğu temel işlevsellikleri (kullanım senaryoları) ve bu işlevselliklerle 
+ ' aktörler arasındaki ilişkileri üst düzey bir bakış açısıyla modellemek. 
+ ' "Ne" yapılacağını gösterir, "nasıl" yapılacağını değil.
+ '
+ '? Ne Zaman Kullanılır?:
+ '  1- Sistemin gereksinimlerini toplamak ve analiz etmek için.
+ '  2- Sistemin kapsamını ve sınırlarını belirlemek için.
+ '  3- Paydaşlarla sistemin işlevselliği hakkında iletişim kurmak için.
+ '  4- Test senaryoları için bir temel oluşturmak için.
+ '/
+
+
+'! 4.1. Temel Elemanlar
+ 
+'* Aktör (Actor):
+'  1- Sistemle etkileşimde bulunan bir kişi, başka bir sistem veya bir donanım aygıtıdır. Sistemin dışındadır.
+'  2- Çöp adam figürü ile gösterilir. Adı altına yazılır.
+'  3- Aktörler, rolleri temsil eder (örn: "Öğrenci", "Öğretmen", "Banka Sistemi"). Bir kişi birden fazla rolü üstlenebilir.
+'  4- Genelleştirme: Aktörler arasında da kalıtım ilişkisi olabilir (bir aktör başka bir aktörün daha özel bir halidir).
+
+
+'* Kullanım Senaryosu (Use Case):
+'  1- Sistemin bir aktöre değer sağlayan belirli bir işlevselliğini veya etkileşim dizisini temsil eder.
+'  2- Oval bir şekil içinde adı yazılarak gösterilir. Genellikle aktif bir fiil ile başlar (örn: "Borrow Book", "Fatura Öde").
+
+'* Sistem Sınırı (System Boundary):
+'  1- Sistemin kapsamını gösteren bir dikdörtgendir. Kullanım senaryoları genellikle bu sınırın içinde, aktörler ise dışında yer alır.
+
+'* İlişkiler:
+'? A- İlişkilendirme (Association):
+'  Bir aktör ile bir kullanım senaryosu arasındaki etkileşimi gösterir.
+'  Düz bir çizgi ile bağlanır. Aktör, kullanım senaryosunu başlatır veya katılır.
+'? B- Genelleştirme (Generalization):
+'  1- Aktörler arasında: Bir aktörün başka bir aktörün özel bir türü olduğunu gösterir.
+'  2- Kullanım senaryoları arasında: Bir kullanım senaryosunun başka bir (daha genel) kullanım senaryosunun özel bir durumu olduğunu gösterir.
+
+'* İçerme (<<include>>):
+'  1- Bir kullanım senaryosunun (temel senaryo) başka bir kullanım senaryosunun (içerilen senaryo) davranışını içerdiğini gösterir.
+'  İçerilen senaryo, temel senaryonun bir parçası olarak her zaman çalıştırılır.
+'  2- Temel senaryodan içerilen senaryoya doğru kesikli bir ok ve <<include>> stereotipi ile gösterilir.
+'  3- Amaç: Ortak davranışları tekrar etmemek, ayrıştırmak.
+
+'* Genişletme (<<extend>>):
+'  1- Bir kullanım senaryosunun (genişleten senaryo) belirli koşullar altında başka bir
+'  kullanım senaryosunun (temel senaryo) davranışını genişletebileceğini (isteğe bağlı ek işlevsellik) gösterir.
+'  2- Genişleten senaryodan temel senaryoya doğru kesikli bir ok ve <<extend>> stereotipi ile gösterilir.
+'  Genişletme noktası (extension point) temel senaryoda belirtilebilir.
+'  3- Amaç: İsteğe bağlı veya istisnai durumları modellemek.
+
+'! 4.2. Örnek Kullanım Senaryosu Diyagramı (Basit Kütüphane Sistemi)
+
+actor Student
+actor Librarian
+
+rectangle "Library System" {
+  Student -- (Search Book)
+  Student -- (Borrow Book)
+  (Borrow Book) .> (Verify Member) : <<include>>
+  Student -- (Return Book)
+  Librarian -- (Add New Book)
+  Librarian -- (Register Member)
+  (Borrow Book) ..> (Calculate Fine) : <<extend>>
+}
+
+Librarian --|> Student : (Student is also a user)
+
+'? Aktörler:
+'  Student, Librarian. (Librarian aynı zamanda bir OgrStudentenci'nin yapabildiklerini de yapabilir gibi bir genelleştirme gösterilmiş, bu senaryoya göre değişir).
+'? Kullanım Senaryoları:
+'  "Search Book", "Borrow Book", "Return Book", "Add New Book", "Register Member", "Verify Member", "Calculate Fine".
+'? <<include>>:
+'  "Borrow Book" işlemi her zaman "Verify Member" işlemini içerir.
+'? <<extend>>:
+'  "Borrow Book" işlemi, eğer kitap geç iade ediliyorsa (bir koşul), "Calculate Fine" işlemi ile genişletilebilir.
