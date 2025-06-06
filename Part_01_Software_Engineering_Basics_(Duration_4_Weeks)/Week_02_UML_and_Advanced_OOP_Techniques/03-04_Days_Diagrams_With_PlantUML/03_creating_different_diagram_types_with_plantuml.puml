@@ -1,0 +1,309 @@
+'TODO Bölüm 3: Farklı Diyagram Türlerini PlantUML ile Oluşturma
+
+'! 3.1. Sınıf Diyagramları (@startxuml ... @endxuml veya @startxclass ... @endxclass)
+
+'* Sınıf Tanımlama:
+'  class ClassName
+'  abstract class AbstractClassName
+'  interface InterfaceName
+'  enum EnumName
+
+'* Özellikler (Attributes):
+'  ClassName : fieldName
+'  ClassName : +publicField: Type
+'  ClassName : -privateField: String = "default"
+'  ClassName : #protectedField
+'  ClassName : {static} staticField
+'  ClassName : {abstract} abstractField (nadiren kullanılır, metotlar için daha yaygın)
+
+'* Metotlar (Methods):
+'  ClassName : methodName()
+'  ClassName : +publicMethod(param1: Type, param2: Type): ReturnType
+'  ClassName : -privateMethod()
+'  ClassName : {static} staticMethod()
+'  ClassName : {abstract} abstractMethod()
+
+'* İlişkiler:
+'? Genelleştirme (Kalıtım): 
+'  - SuperClass <|-- SubClass veya SubClass --|> SuperClass
+'? Gerçekleştirme (Implementation):
+'  - Interface <|.. RealizingClass veya RealizingClass ..|> Interface
+'? İlişkilendirme (Association):
+'  1- Class1 -- Class2 (Belirtilmemiş)
+'  2- Class1 "1" -- "0..*" Class2 : associationName (Çokluk ve isim ile)
+'  3- Class1 --> Class2 (Yönlü)
+'  4- Class1 -> Class2 (Yönlü, genellikle daha güçlü bir ilişkiyi veya navigasyonu ifade eder)
+'? Toplama (Aggregation):
+'  Whole o-- Part
+'? Birleşim (Composition):
+'  Whole *-- Part
+'? Bağımlılık: 
+'  Client ..> Supplier veya Client ..|> Supplier (eski gösterim)
+
+'* Notlar:
+'  note "Bu önemli bir sınıftır." as N1 ClassName .. N1
+
+'* Örnek Sınıf Diyagramı:
+
+@startuml Library_System_Class_Diagram
+title Library System Class Diagram
+skinparam classAttributeIconSize 0 'Hide property icons (optional)
+
+package "Core Entities" {
+    class Book {
+        -isbn: String
+        -title: String
+        -author: String
+        +isBorrowed: boolean
+        +Book(isbn: String, title: String, author: String)
+        +showInfo(): String
+        +borrow(): boolean
+        +return(): boolean
+    }
+
+    class Member {
+        -memberId: String
+        -name: String
+        #borrowedBooks: List<Book>
+        +Member(memberId: String, name: String)
+        +borrowBook(book: Book): void
+        +returnBook(book: Book): void
+    }
+}
+
+package "Library Management" {
+    class Library {
+        -books: Map<String, Book>
+        -members: Map<String, Member>
+        +addBook(book: Book): void
+        +addMember(member: Member): void
+        +lendBook(isbn: String, memberId: String): boolean
+    }
+}
+
+' Relationships
+Library "1" o-- "*" Book : contains
+Library "1" o-- "*" Member : registeredMembers
+
+Member "1" -- "0..*" Book : borrows ' This relationship is represented by #borrowedBooks
+
+' Dependency example (optional)
+' Library ..> PaymentSystem : uses (If there's a paid service in the library)
+
+note right of Book : "Each book must have a unique ISBN."
+note "Members can borrow up to 5 books." as MemberNote
+Member .. MemberNote
+
+@enduml
+
+'! 3.2. Bileşen Diyagramları (@startxuml ... @endxuml veya @startxcomponent ... @endxcomponent)
+
+'* Bileşen Tanımlama:
+'  component ComponentName
+'  [ComponentName] (Alternatif gösterim)
+'  component "Long Component Name" as C1
+
+'* Arayüz (Interface):
+'  interface InterfaceName
+'  () InterfaceName (Lolipop gösterimi için)
+
+'* Portlar: Bileşenin dış dünya ile etkileşim noktaları.
+'  [Component] - [portName] (kare port)
+
+'* İlişkiler:
+'? Sağlanan Arayüz (Provided Interface): Bileşenin bir arayüzü sunduğunu gösterir.
+'  1- Component --() InterfaceName (Bileşenden lolipop ile arayüze)
+'  2- Component -|> InterfaceName (Eğer arayüzü doğrudan implemente ediyorsa)
+'? Gereken Arayüz (Required Interface / Dependency): Bileşenin başka bir arayüze ihtiyaç duyduğunu gösterir.
+'  1- Component --( InterfaceName (Yarım daire ile)
+'  2- Component ..> InterfaceName (Bağımlılık oku)
+'? Bağlayıcı (Connector): Portlar veya arayüzler arasında. port1 -- port2
+
+'* Artifacts: Bileşenin fiziksel bir tezahürü (örn: .jar, .dll, .exe).
+'  artifact "app.jar"
+'  ComponentName <.. artifact (Bileşen artifact'i manifest eder)
+
+'* Örnek Bileşen Diyagramı:
+
+@startuml E-Commerce_System_Components
+title E-Commerce System Components
+
+skinparam componentStyle uml2
+
+package "Web Interface" {
+  [UserInterface] as UI
+  [OrderForm]
+}
+
+package "Business Logic" {
+  component OrderService {
+    port orderPort
+  }
+  [ProductCatalogService]
+  [PaymentService]
+}
+
+package "Data Access" {
+  database Database
+}
+
+' Interfaces
+interface IOrder
+interface IProductCatalog
+interface IPayment
+
+' Relationships
+UI --> OrderForm
+OrderForm --> OrderService : (orderPort)
+
+OrderService --() IOrder : provides
+OrderService ..> IProductCatalog : uses
+OrderService ..> IPayment : uses
+
+ProductCatalogService --() IProductCatalog
+PaymentService --() IPayment
+
+OrderService ..> Database
+ProductCatalogService ..> Database
+
+artifact "WebApp.war" as webArtifact
+artifact "BusinessLogic.jar" as bizArtifact
+
+[UserInterface] . webArtifact
+[OrderForm] . webArtifact
+OrderService <.. bizArtifact
+
+@enduml
+
+'! 3.3. Durum Diyagramları (State Machine Diagrams) (@startxuml ... @endxuml veya @startxstate ... @endxstate)
+
+'* Durum (State):
+'  1- state StateName
+'  2- state "Uzun Durum Adı" as S1
+'  3- [*]: Başlangıç durumu (initial state)
+'? 4- state StateName { ... }: İç içe durumlar veya giriş/çıkış/iç eylemler
+'  - entry / eylem
+'  - exit / eylem
+'  - StateName : içEylem()
+
+'* Geçiş (Transition):
+'? 1- State1 --> State2 : event [guard] / action
+'  - event: Geçişi tetikleyen olay.
+'  - [guard]: Geçişin gerçekleşmesi için sağlanması gereken koşul (köşeli parantez içinde).
+'  - / action: Geçiş sırasında gerçekleştirilecek eylem.
+
+'* Seçim (Choice Pseudo-state):
+'  - state choice <<choice>>
+'  - State1 --> choice
+'  - choice --> State2 : [koşul1]
+'  - choice --> State3 : [koşul2]
+
+'* Birleşme/Çatallanma (Join/Fork Pseudo-state):
+'  - state fork_state <<fork>>
+'  - state join_state <<join>>
+'  - Paralel durumlar için kullanılır.
+
+'* Geçmiş Durumları (History States): 
+'  - state H (shallow history), state H* (deep history)
+
+'* Örnek Durum Diyagramı (Sipariş Durumları):
+
+@startuml Order_State_Machine
+title Order State Machine
+
+[*] --> Pending : Order Created
+
+state Pending {
+  Pending : Awaiting Verification
+  Pending --> Approved : Payment Successful [valid payment] / Check Inventory
+  Pending --> Canceled : Payment Failed / Notify Customer
+}
+
+state Approved {
+  Approved --> Processing : Inventory Available / Gather Items
+  Approved --> Canceled : Out of Stock / Notify Customer
+}
+
+Processing --> Shipped : Items Packaged / Hand to Shipping Company
+Shipped --> Delivered : Package Received / Send Notification
+Delivered --> Completed
+
+Canceled --> [*]
+Completed --> [*]
+
+note right of Pending
+  Customer payment
+  is being verified.
+end note
+@enduml
+
+'! 3.4. Sıralama Diyagramları (@startxuml ... @endxuml veya @startxsequence ... @endxsequence)
+
+'* Katılımcı (Participant):
+'  - participant ParticipantName
+'  - actor ActorName
+'  - boundary BoundaryName
+'  - control ControlName
+'  - entity EntityName
+'  - database DatabaseName
+'  - collections CollectionsName
+
+'* Mesajlar:
+'  - A -> B : messageText (Senkron mesaj)
+'  - A ->> B : messageText (Senkron mesaj, daha belirgin ok)
+'  - A ->* B : messageText (Asenkron mesaj)
+'  - A -\ B : messageText (Asenkron mesaj, eski gösterim)
+'  - A // B : messageText (Asenkron mesaj, daha yeni gösterim)
+'  - B --> A : replyText (Yanıt mesajı)
+'  - B -->> A : replyText (Yanıt mesajı, daha belirgin)
+
+'* Aktivasyon/Deaktivasyon:
+'  - activate ParticipantName
+'  - deactivate ParticipantName
+'  - Mesaj gönderildiğinde otomatik aktivasyon için: A -> B++ : message (B aktive olur)
+'  - Yanıt döndüğünde otomatik deaktivasyon için: B -->> A-- : reply (B deaktive olur)
+
+'* Notlar: 
+'  - note left of A : Bu önemli bir adımdır.
+
+'* Etkileşim Parçacıkları:
+'  - alt successful case ... else failure case ... end
+'  - opt optional step ... end
+'  - loop 10 times ... end
+'  - par ... and ... end
+'  - ref Over S1, S2 : Referans Diyagram Adı
+
+'* Oluşturma/Yok Etme:
+'  - create ParticipantName
+'  - A -> ParticipantName : <<create>>
+'  - destroy ParticipantName
+
+'* Gecikmeler:
+'  - ... 5 minutes later ... 
+
+'* Örnek Sıralama Diyagramı (Kullanıcı Girişi):
+
+@startuml User_Login_Sequence_Diagram
+title User Login Sequence Diagram
+
+actor User as U
+participant "Web Interface" as UI
+participant "Auth Service" as AuthSvc
+database "User Database" as DB
+
+autonumber "<b>[00]"
+
+U -> UI ++ : Enters username, password
+UI -> AuthSvc ++ : login(username, password)
+AuthSvc -> DB ++ : getUser(username)
+DB -->> AuthSvc -- : userData / null
+
+alt userData != null AND passwordCorrect
+    AuthSvc -> AuthSvc : generateToken()
+    AuthSvc -->> UI -- : successToken
+    UI -->> U -- : Login Successful
+else Other Cases
+    AuthSvc -->> UI -- : errorMessage
+    UI -->> U -- : Login Failed
+end
+@enduml
