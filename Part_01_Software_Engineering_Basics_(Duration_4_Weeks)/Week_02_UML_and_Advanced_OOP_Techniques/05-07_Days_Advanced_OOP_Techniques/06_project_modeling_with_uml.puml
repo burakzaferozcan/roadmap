@@ -1,0 +1,102 @@
+'TODO Bölüm 6: Pratik Uygulama: Mevcut bir Projeyi UML ile Modelleme (Ödev/Egzersiz)
+
+'! 1. Gereksinimleri Anlama
+
+'* Aktörler:
+'  - User (Customer, Guest)
+'* Temel İşlevler:
+'  1- Ürün arama/listeleme
+'  2- Sepete ekleme/çıkarma
+'  3- Sipariş oluşturma
+'  4- Ödeme yapma
+'* Ana Nesneler:
+'  1- User (membership information, order history)
+'  2- Product (name, price, stock)
+'  3- Basket (product list, total amount)
+'  4- Order (order details, status)
+'  5- Payment (payment method, amount)
+
+
+'! 2. Kullanım Senaryosu (Use Case) Diyagramı
+
+@startuml E-Commerce_System
+left to right direction
+actor User as U
+rectangle "E-Commerce System" {
+  usecase "Product Search" as UC1
+  usecase "Add to Cart" as UC2
+  usecase "Create Order" as UC3
+  usecase "Make Payment" as UC4
+  U --> UC1
+  U --> UC2
+  U --> UC3
+  U --> UC4
+  UC3 .> UC2 : <<include>>
+  UC4 .> UC3 : <<include>>
+}
+@enduml
+
+'? <<include>>: Sipariş oluşturmak için sepete ürün eklenmelidir.
+
+'! 3. Kullanım Senaryosu (Use Case) Diyagramı
+'* GRASP Prensipleri ve OOP Teknikleri:
+'  Bilgi Uzmanı: Basket, kendisindeki ürünlerin toplam fiyatını hesaplar.
+'  Creative: Order nesnesini Basket oluşturur.
+'  Interfaces: IPaymentMethod ile farklı ödeme yöntemleri (kredi kartı, PayPal).
+
+@startuml Class_E-Commerce_System
+class User {
+  -id: String
+  -name: String
+  +productSearch(keyword: String): List<Product>
+}
+
+class Product {
+  -id: String
+  -price: double
+  +stockUpdate(): void
+}
+
+class Basket {
+  -products: List<Product>
+  +totalAmountCalculate(): double
+  +converttoOrder(): Order
+}
+
+class Order {
+  -status: String
+  +makePayment(payment: IPaymentMethod): boolean
+}
+
+interface IPaymentMethod {
+  +makePayment(amount: double): boolean
+}
+
+class CreditCard implements IPaymentMethod {
+  +makePayment(amount: double): boolean
+}
+
+User "1" --> "0..*" Basket
+Basket "1" --> "1..*" Product
+Basket "1" --> "1" Order
+Order ..> IPaymentMethod
+@enduml
+
+'! 4. Sıralama Diyagramı (Sepete Ekleme Senaryosu)
+
+@startuml Sorting_E-Commerce_System
+actor User
+participant "Interface" as UI
+participant Basket
+participant Product
+
+User -> UI: "Product Search (iPhone)"
+UI -> Product: getProducts("iPhone")
+Product --> UI: Product List
+User -> UI: "Add to Cart (ProductID)"
+UI -> Basket: addProduct(ProductID)
+Basket -> Product: stockControl()
+Product --> Basket: Stock Available
+Basket --> UI: Success
+UI --> User: "Added to Cart"
+@enduml
