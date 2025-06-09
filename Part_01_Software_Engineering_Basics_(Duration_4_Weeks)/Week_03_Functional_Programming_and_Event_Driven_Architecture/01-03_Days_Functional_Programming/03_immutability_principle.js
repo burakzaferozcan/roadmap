@@ -35,22 +35,22 @@
 
 {
   // Değişmez Nesne Güncelleme
-  const kullanici = { id: 1, ad: "Ayşe", aktif: true };
-  // Ayşe'nin aktif durumunu false yapalım (değişmez şekilde)
-  const guncelKullanici = { ...kullanici, aktif: false };
-  console.log(kullanici); // { id: 1, ad: 'Ayşe', aktif: true } (orijinal değişmedi)
-  console.log(guncelKullanici); // { id: 1, ad: 'Ayşe', aktif: false }
+  const user = { id: 1, name: "Ayşe", active: true };
+  // Ayşe'nin active durumunu false yapalım (değişmez şekilde)
+  const currentUser = { ...user, active: false };
+  console.log(user); // { id: 1, name: 'Ayşe', active: true } (orijinal değişmedi)
+  console.log(currentUser); // { id: 1, name: 'Ayşe', active: false }
 
   // Değişmez Dizi Güncelleme
-  const renkler = ["kırmızı", "yeşil", "mavi"];
+  const colors = ["kırmızı", "yeşil", "mavi"];
   // "sarı" ekleyelim
-  const yeniRenkler = [...renkler, "sarı"];
-  console.log(renkler); // ["kırmızı", "yeşil", "mavi"] (orijinal değişmedi)
-  console.log(yeniRenkler); // ["kırmızı", "yeşil", "mavi", "sarı"]
+  const newColors = [...colors, "sarı"];
+  console.log(colors); // ["kırmızı", "yeşil", "mavi"] (orijinal değişmedi)
+  console.log(newColors); // ["kırmızı", "yeşil", "mavi", "sarı"]
 
   // "yeşil"i çıkaralım
-  const yesilsizRenkler = renkler.filter((renk) => renk !== "yeşil");
-  console.log(yesilsizRenkler); // ["kırmızı", "mavi"]
+  const greenlessColors = colors.filter((color) => color !== "yeşil");
+  console.log(greenlessColors); // ["kırmızı", "mavi"]
 }
 
 //? Not:
@@ -64,21 +64,21 @@
 //  bu iç nesneler hala değiştirilebilir. Derin dondurma için özel bir fonksiyon yazmak gerekir.
 
 {
-  const ayarlar = { tema: "karanlık", dil: "tr" };
-  Object.freeze(ayarlar);
+  const settings = { theme: "dark", lang: "tr" };
+  Object.freeze(settings);
 
-  // ayarlar.tema = "açık"; // Strict mode'da hata verir, normal modda sessizce başarısız olur.
-  // ayarlar.fontBoyutu = 12; // Eklenemez.
-  console.log(ayarlar.tema); // "karanlık"
+  // settings.theme = "light"; // Strict mode'da hata verir, normal modda sessizce başarısız olur.
+  // settings.fontSize = 12; // Eklenemez.
+  console.log(settings.theme); // "dark"
 
-  const karmasikAyarlar = {
-    kullanici: { ad: "Can" },
-    renkler: ["#FFF", "#000"],
+  const complexSettings = {
+    user: { name: "Can" },
+    colors: ["#FFF", "#000"],
   };
-  Object.freeze(karmasikAyarlar);
-  // karmasikAyarlar.kullanici.ad = "Deniz"; // Bu hala çalışır! Çünkü kullanici nesnesi dondurulmadı.
-  // karmasikAyarlar.renkler.push("#CCC"); // Bu da çalışır.
-  console.log(karmasikAyarlar.kullanici.ad); // "Deniz"
+  Object.freeze(complexSettings);
+  // complexSettings.user.name = "Deniz"; // Bu hala çalışır! Çünkü user nesnesi dondurulmadı.
+  // complexSettings.colors.push("#CCC"); // Bu da çalışır.
+  console.log(complexSettings.user.name); // "Deniz"
 }
 
 //* 3- Değişmez Veri Yapıları Kütüphaneleri:
