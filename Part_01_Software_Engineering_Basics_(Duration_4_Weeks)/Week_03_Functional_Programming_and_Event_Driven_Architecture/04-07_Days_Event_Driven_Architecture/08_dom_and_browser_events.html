@@ -1,0 +1,204 @@
+<!--TODO Bölüm 8: DOM Olayları ve Tarayıcı Olayları -->
+<!--  - Tarayıcı ortamında JavaScript, kullanıcı etkileşimlerini ve tarayıcı durum değişikliklerini yakalamak için -->
+<!--  Document Object Model (DOM) olaylarını ve diğer tarayıcı olaylarını kullanır. -->
+
+<!--! 8.1. DOM Olayları -->
+
+<!--? DOM (Document Object Model): -->
+<!--  - Bir HTML veya XML belgesinin programlama arayüzüdür. Belgenin yapısını bir ağaç (tree) olarak temsil eder ve -->
+<!--  JavaScript'in bu yapıyı dinamik olarak değiştirmesini, içeriğe erişmesini ve olaylara tepki vermesini sağlar. -->
+
+<!--? DOM Olayları Nedir? -->
+<!--  - DOM elemanlarında (buton, input, div vb.) veya belgenin kendisinde (document, window) meydana gelen etkileşimler veya -->
+<!--  durum değişiklikleridir. -->
+
+<!--? Yaygın DOM Olay Türleri:* -->
+<!--* Fare Olayları: -->
+<!--  click, dblclick, mousedown, mouseup, mousemove, mouseover, mouseout, mouseenter, mouseleave. -->
+<!--* Klavye Olayları: -->
+<!--  keydown, keyup, keypress (deprecated). -->
+<!--* Form Olayları: -->
+<!--  submit (form gönderildiğinde), change (input değeri değiştiğinde), input (input değeri anlık değişirken), focus, blur. -->
+<!--* Pencere/Belge Olayları: -->
+<!--  load (sayfa ve tüm kaynaklar yüklendiğinde), -->
+<!--  DOMContentLoaded (HTML yüklendi ve DOM ağacı hazır olduğunda, resimler vb. beklenmeden), resize (pencere boyutu değiştiğinde), scroll. -->
+<!--* Medya Olayları: -->
+<!--  play, pause, ended (<audio>, <video> için). -->
+<!--* Drag & Drop Olayları: -->
+<!--  dragstart, drag, dragend, drop. -->
+
+<!--! 8.2. Olay Dinleme Yöntemleri (Tarayıcıda) -->
+
+<!--* 1- HTML Olay Niteliği (Inline Event Handlers - Kaçınılmalı!): -->
+<button onclick="alert('Butona tıklandı!');">Bana Tıkla</button>
+<button onclick="myFunction(this)">Başka Buton</button>
+<script>
+  function myFunction(element) {
+    console.log(element.textContent + " tıklandı.");
+  }
+</script>
+
+<!--? Neden Kaçınılmalı? -->
+<!--  - HTML ve JavaScript'i karıştırır, bakım zorlaşır, this bağlamı kafa karıştırıcı olabilir, birden fazla handler eklemek zordur. -->
+
+<!--* 2- DOM Elemanı Özellikleri (DOM Level 0 Handlers): -->
+
+<button id="button1">Tıkla Bana</button>
+<script>
+  const button1 = document.getElementById("button1");
+  button1.onclick = function () {
+    console.log("Button1 1'e DOM özelliği ile tıklandı.");
+  };
+  // Dikkat: Sadece bir tane onclick handler atanabilir. Yenisi eskisini ezer.
+  // button1.onclick = function() { console.log("Bu ikinci handler, ilki ezildi."); };
+</script>
+<!--? Daha iyi ama hala sınırlı (her olay türü için tek bir handler). -->
+
+<!--* 3- addEventListener() (Modern ve Tercih Edilen Yöntem - DOM Level 2 Events): -->
+<!--  - Bir elemana aynı olay türü için birden fazla dinleyici eklemeyi sağlar. -->
+<!--  - Daha fazla kontrol sunar (yakalama/kabarcıklanma aşaması). -->
+<!--  - Sözdizimi: element.addEventListener(type, listener, optionsOrUseCapture); -->
+<!--! a- type: -->
+<!--  - Olayın adı (string, örn: 'click', 'keydown'). -->
+<!--! b- listener: -->
+<!--  - Olay gerçekleştiğinde çağrılacak fonksiyon (event handler). Bu fonksiyona bir Event nesnesi parametre olarak geçer. -->
+<!--! c- optionsOrUseCapture (isteğe bağlı): -->
+<!--  - Boolean: true ise yakalama (capturing) aşamasında, false (varsayılan) ise kabarcıklanma (bubbling) aşamasında dinler. -->
+<!--  - Nesne: { capture: boolean, once: boolean, passive: boolean } gibi seçenekler sunar. -->
+<!--  1- once: true: Listener bir kez çalıştıktan sonra otomatik olarak kaldırılır. -->
+<!--  2- passive: true: Listener'ın event.preventDefault() çağırmayacağını tarayıcıya bildirir (performans optimizasyonu, özellikle scroll/touch olaylarında). -->
+
+<button id="button2">Gelişmiş Tıklama</button>
+<div id="container" style="padding: 20px; background-color: lightblue">
+  <button id="innerButton" style="padding: 10px; background-color: lightgreen">
+    İç Buton
+  </button>
+</div>
+<script>
+  const button2 = document.getElementById("button2");
+
+  function firstHandler(event) {
+    console.log("İlk handler çalıştı!");
+    console.log("Olay Tipi:", event.type);
+    console.log("Hedef Eleman:", event.target); // Olayın doğrudan tetiklendiği eleman
+    console.log("Mevcut Hedef (this):", this); // Listener'ın eklendiği eleman
+  }
+  function secondHandler() {
+    console.log("İkinci handler da çalıştı!");
+  }
+
+  button2.addEventListener("click", firstHandler);
+  button2.addEventListener("click", secondHandler);
+
+  // Kaldırma
+  // button2.removeEventListener('click', secondHandler);
+</script>
+
+<!--! 8.3. Olay Nesnesi (Event Object) -->
+<!--  - Olay işleyici fonksiyonuna otomatik olarak bir Event nesnesi (veya daha spesifik bir alt türü, örn: MouseEvent, KeyboardEvent)
+      parametre olarak geçirilir. Bu nesne olay hakkında önemli bilgiler içerir: -->
+
+<!--  - event.type: Olayın türü (örn: "click"). -->
+<!--  - event.target: Olayın ilk olarak tetiklendiği (kaynaklandığı) DOM elemanı. -->
+<!--  - event.currentTarget (veya this - ok fonksiyonu değilse): Listener'ın eklendiği DOM elemanı. (Olay kabarcıklanmasında target ve currentTarget farklı olabilir). -->
+<!--  - event.preventDefault(): Tarayıcının olayla ilişkili varsayılan davranışını engeller (örn: bir linke tıklandığında sayfaya gitmeyi, form submit olduğunda sayfayı yenilemeyi). -->
+<!--  - event.stopPropagation(): Olayın DOM ağacında daha yukarıya (kabarcıklanma) veya daha aşağıya (yakalama) yayılmasını durdurur. -->
+<!--  - event.key (KeyboardEvent): Basılan tuşun değeri. -->
+<!--  - event.keyCode (KeyboardEvent - deprecated): Basılan tuşun sayısal kodu. -->
+<!--  - event.clientX, event.clientY (MouseEvent): Fare imlecinin pencereye göre koordinatları. -->
+<!--  - event.pageX, event.pageY (MouseEvent): Fare imlecinin belgeye göre koordinatları. -->
+<!--  - Ve daha birçok olaya özgü özellik... -->
+
+<!--! 8.4. Olay Yayılımı (Event Propagation): Yakalama (Capturing) ve Kabarcıklanma (Bubbling) -->
+<!--  - Bir DOM elemanında bir olay meydana geldiğinde, olay DOM ağacında iki aşamada yayılır: -->
+
+<!--? Yakalama Aşaması (Capturing Phase): -->
+<!--  - Olay, window'dan başlar, DOM ağacında aşağı doğru hedeflenen elemana kadar iner.
+   Bu aşamada olay dinleyicileri varsayılan olarak çalışmaz.
+   (addEventListener'da useCapture veya options.capture true yapılırsa bu aşamada çalışır). -->
+
+<!--? Hedef Aşaması (Target Phase):  -->
+<!--  - Olay, doğrudan hedeflenen elemana ulaşır. Bu elemana eklenmiş dinleyiciler çalışır. -->
+
+<!--? Kabarcıklanma Aşaması (Bubbling Phase): -->
+<!--  - Olay, hedeflenen elemandan başlayarak DOM ağacında yukarı doğru window'a kadar geri çıkar.
+   Bu aşamada olay dinleyicileri varsayılan olarak çalışır. (Bazı olaylar kabarcıklanmaz, örn: focus, blur, load). -->
+
+<script>
+  const container = document.getElementById("container");
+  const innerButton = document.getElementById("innerButton");
+
+  // Yakalama Aşaması Dinleyicisi
+  container.addEventListener(
+    "click",
+    function (event) {
+      console.log(
+        "Container YAKALADI (Capturing): Hedef=" +
+          event.target.id +
+          ", MevcutHedef=" +
+          this.id
+      );
+    },
+    true
+  ); // true -> yakalama aşamasında dinle
+
+  // Kabarcıklanma Aşaması Dinleyicisi (varsayılan)
+  container.addEventListener("click", function (event) {
+    console.log(
+      "Container KABARCIKLANDI (Bubbling): Hedef=" +
+        event.target.id +
+        ", MevcutHedef=" +
+        this.id
+    );
+  });
+
+  innerButton.addEventListener("click", function (event) {
+    console.log(
+      "Inner Button TIKLANDI (Target/Bubbling): Hedef=" +
+        event.target.id +
+        ", MevcutHedef=" +
+        this.id
+    );
+    // event.stopPropagation(); // Bunu açarsanız, container'ın kabarcıklanma handler'ı çalışmaz.
+  });
+  // Inner Button'a tıklandığında çıktı sırası (yaklaşık):
+  // Container YAKALADI (Capturing): Hedef=innerButton, MevcutHedef=container
+  // Inner Button TIKLANDI (Target/Bubbling): Hedef=innerButton, MevcutHedef=innerButton
+  // Container KABARCIKLANDI (Bubbling): Hedef=innerButton, MevcutHedef=container
+</script>
+
+<!--! 8.5. Olay Delegasyonu (Event Delegation) -->
+<!--  - Çok sayıda elemana (özellikle dinamik olarak eklenenlere) tek tek olay dinleyicisi eklemek yerine,
+    ortak bir üst elemana tek bir dinleyici ekleyip, event.target özelliğini kullanarak olayın hangi alt elemandan
+    kaynaklandığını belirleme tekniğidir. -->
+
+<!--? Avantajları: -->
+<!--  - Performans: Daha az sayıda dinleyici. -->
+<!--  - Dinamik Elemanlar: Sonradan eklenen alt elemanlar için de çalışır, çünkü dinleyici üst elemandadır. -->
+<!--  - Daha Basit Kod: Çok sayıda addEventListener çağrısından kurtarır. -->
+
+<ul id="list">
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <button id="addBtn">Add New Item</button>
+</ul>
+<script>
+  const list = document.getElementById("list");
+  const addBtn = document.getElementById("addBtn");
+  let counter = 3;
+
+  // Olay Delegasyonu
+  list.addEventListener("click", function (event) {
+    // Sadece LI elemanlarından gelen tıklamaları işle
+    if (event.target.tagName === "LI") {
+      console.log(event.target.textContent + " tıklandı (delegasyon ile).");
+    }
+  });
+
+  addBtn.addEventListener("click", function () {
+    const newItem = document.createElement("li");
+    newItem.textContent = "Item " + counter++;
+    list.insertBefore(newItem, addBtn); // Yeni eleman butondan önce eklenir
+    // Yeni eklenen LI için ayrıca addEventListener yapmaya gerek yok!
+  });
+</script>
